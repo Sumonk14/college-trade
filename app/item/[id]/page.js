@@ -2,22 +2,28 @@
 import { useState, useEffect} from "react"
 import React from "react"
 import Link from "next/link"
+import { createClient } from "../../lib/supabase"
 
-
+const supabase = createClient()
 export default  function ItemPage({ params }) {
     const { id } = React.use(params)
     
     const [item, setItem  ] = useState(null)
 
     useEffect (() =>{
-        const existing = localStorage.getItem("listings")
-        const listings = existing? JSON.parse(existing) : []
-        console.log("listings", listings)
-        console.log("id from url", id)
-        console.log("id type", typeof id)
-        const found = listings.find((listing) => listing.id === Number(id))
-        console.log("found", found)
-        setItem(found)
+        async function fetchListings() {
+        const { data, error } = await supabase
+        .from("listings")
+        .select("*")
+        .eq("id", id)
+        .single()
+        if (error) {
+        console.log(error)
+        return 
+        }
+        setItem(data)
+        }
+        fetchListings()
     }, []) 
 
     if(!item) return <p> Loading...</p>
@@ -27,6 +33,9 @@ export default  function ItemPage({ params }) {
             <Link href="/">
                 <button className="bg-blue-600 text-white border rounded p-3 w mb-6">Back</button>
             </Link>
+            {item.image_url && (
+                <img src={item.image_url} alt={item.title} className="w-full h-64 object-cover rounded-lg mb-6" />
+            )}
                 <h1 className="text-3xl font-bold">{item.title}</h1>
                 <p className="text-2xl font-bold text-green-600">{item.price}</p>
                 <p className="mt-4 text-gray-600">{item.description}</p>

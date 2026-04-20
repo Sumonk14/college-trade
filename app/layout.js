@@ -1,6 +1,6 @@
-import Link from "next/link"
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from "./components/Navbar"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,12 +24,9 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <nav className="bg-gray-900 text-white p-2 gap-6 flex font-bold text-xl justify-between">
-          <Link href="/" className="font-bold text-xl">College Trade</Link>
-          <Link href="/sell">Sell Item</Link>    
-        </nav>
+        <Navbar/>
         {children}
-        </body>
+      </body>
     </html>
   );
 }

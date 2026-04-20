@@ -1,29 +1,64 @@
 "use client"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { createClient } from "../lib/supabase"
 
+const supabase = createClient()
 export default function sell() {
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [category, setCategory] = useState("Books")
     const [price, setPrice] = useState("")
+    const [image, setImage] = useState(null)
     
     const router = useRouter()
+
+    useEffect(() => {
+        async function checkAuth() {
+            const {data} = await supabase.auth.getSession()
+            if (!data.session) {
+                router.push("/login")
+            }
+        }
+        checkAuth()
+    }, [])
     
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault()
+        let imageUrl = null
+
+        if (image) {
+            const fileName = `${Date.now()}-${image.name}`
+            const {error: uploadError } = await supabase.storage
+            .from("images")
+            .upload(fileName, image)
+        
+        if (uploadError){
+            console.log(uploadError)
+            return
+        }
+
+        const { data: urlData } = supabase.storage
+            .from("images")
+            .getPublicUrl(fileName)
+        imageUrl = urlData.publicUrl
+        }
+
         const newListing = {
-            id: Date.now(),
             title,
             price,
             description,
-            category
+            category,
+            image_url: imageUrl
         }
-        const existing = localStorage.getItem("listings")
-        const listings = existing? JSON.parse(existing) : []
-        listings.push(newListing)
-        localStorage.setItem("listings", JSON.stringify(listings))
+        const { error } = await supabase
+        .from("listings")
+        .insert([newListing])
+        if (error) {
+            console.log(error)
+            return
+        }
         setTitle("")
         setDescription("")
         setCategory("")
@@ -62,6 +97,12 @@ export default function sell() {
                     <option>Furniture</option>
                     <option>Other</option>
                 </select> 
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImage(e.target.files[0])}
+                    className="border rounded p-2 w-full"
+                />
                 <button type="submit" className="bg-blue-600 text-white border rounded p-3 w-full">Post Item</button>
                 
             </form>
