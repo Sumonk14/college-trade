@@ -10,6 +10,7 @@ export default function sell() {
     const [category, setCategory] = useState("Books")
     const [price, setPrice] = useState("")
     const [image, setImage] = useState(null)
+    const [number, setNumber] = useState("")
     
     const router = useRouter()
 
@@ -44,13 +45,15 @@ export default function sell() {
             .getPublicUrl(fileName)
         imageUrl = urlData.publicUrl
         }
-
+        const { data: { session } } = await supabase.auth.getSession()
         const newListing = {
             title,
             price,
             description,
             category,
-            image_url: imageUrl
+            image_url: imageUrl,
+            number,
+            user_id: session.user.id
         }
         const { error } = await supabase
         .from("listings")
@@ -63,6 +66,7 @@ export default function sell() {
         setDescription("")
         setCategory("")
         setPrice("")
+        setNumber("")
         router.push("/")
         
     }
@@ -95,6 +99,7 @@ export default function sell() {
                     <option>Books</option>
                     <option>Electronics</option>
                     <option>Furniture</option>
+                    <option>Utensils</option>
                     <option>Other</option>
                 </select> 
                 <input
@@ -102,6 +107,11 @@ export default function sell() {
                     accept="image/*"
                     onChange={(e) => setImage(e.target.files[0])}
                     className="border rounded p-2 w-full"
+                />
+                <input className="border rounded p-2 w-full"
+                placeholder= "Phone Number"
+                value = {number}
+                onChange={(e) => setNumber(e.target.value)}
                 />
                 <button type="submit" className="bg-blue-600 text-white border rounded p-3 w-full">Post Item</button>
                 

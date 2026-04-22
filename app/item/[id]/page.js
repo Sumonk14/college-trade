@@ -41,7 +41,7 @@ export default  function ItemPage({ params }) {
                 <p className="mt-4 text-gray-600">{item.description}</p>
                 <p className="bg-gray-100 px-2 py-1 rounded text-sm mt-4">{item.category}</p>
                 <a
-                    href={`https://wa.me/919990824354?text=I'm interested in ${item.title}`}
+                    href={`https://wa.me/${item.number}?text=I'm interested in ${item.title}`}
                     target="_blank"
                     className="bg-green-500 text-white rounded p-3 mt-6 inline-block"
                 >
