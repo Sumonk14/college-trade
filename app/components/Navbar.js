@@ -26,7 +26,7 @@ useEffect(() => {
     return (
         <nav className="bg-gray-900 text-white p-2 gap-6 flex font-bold text-xl justify-between">
           <Link href="/" className="font-bold text-xl">College Trade</Link>
-          <Link href="/sell">Sell Item</Link>
+          <Link href="/sell" className="bg-blue-600 px-4 py-2 rounded">Sell Item</Link>
           {user ? (
             <button onClick={async () => {
               await supabase.auth.signOut()
