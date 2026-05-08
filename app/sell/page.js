@@ -6,6 +6,7 @@ import { createClient } from "../lib/supabase"
 const supabase = createClient()
 export default function sell() {
     const [title, setTitle] = useState("")
+    const [name, SetName] = useState("")
     const [description, setDescription] = useState("")
     const [category, setCategory] = useState("Books")
     const [price, setPrice] = useState("")
@@ -48,6 +49,7 @@ export default function sell() {
         const { data: { session } } = await supabase.auth.getSession()
         const newListing = {
             title,
+            name,
             price,
             description,
             category,
@@ -63,6 +65,7 @@ export default function sell() {
             return
         }
         setTitle("")
+        SetName("")
         setDescription("")
         setCategory("")
         setPrice("")
@@ -80,6 +83,12 @@ export default function sell() {
                 placeholder ="Item name"
                 value={title}
                 onChange = {(e) => setTitle(e.target. value)}
+                />
+
+                <input className="border rounded p-2 w-full"
+                placeholder = "Seller Name"
+                value={name}
+                onChange = {(e) => SetName(e.target.value)}
                 />
 
                 <input className="border rounded p-2 w-full"

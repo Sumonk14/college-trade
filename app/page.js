@@ -41,7 +41,7 @@ export default function Home() {
 
   return (
     <main className="max-w-5xl mx-auto p-8 bg-gray-50 min-h-screen"> 
-      <h1 className="text-5xl font-extrabold text-blue-600 mb-2">College Trade</h1>
+      <h1 className="text-5xl font-extrabold text-blue-600 mb-2">Campus Trade</h1>
       <p className="text-gray-500 mb-6">Buy and sell stuff on campus</p>
       <button onClick = {() => setFilter ("All")}className={`border rounded px-4 py-2 mr-2 ${filter === "All" ? "bg-blue-600 text-white" : "hover:bg-gray-100"}`}>All</button>
       <button onClick = {() => setFilter("Books")}className={`border rounded px-4 py-2 mr-2 ${filter === "Books" ? "bg-blue-600 text-white" : "hover:bg-gray-100"}`}>Books</button>
@@ -62,6 +62,7 @@ export default function Home() {
             <h2 className="text-lg">{item.title }</h2>
             <h3 className="text-green-600">{item.price}</h3>
             <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">{item.category}</span>
+            <h4 className="text-lg">Seller Name: {item.name}</h4>
             {currentUser && currentUser.id === item.user_id && (
           <button onClick={() => handleDelete(item.id)} className="bg-red-500 text-white text-sm px-3 py-1 rounded mt-2 w-full hover:bg-red-600">
             Delete
